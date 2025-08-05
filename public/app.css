@@ -1,0 +1,51 @@
+/*@import "~bootstrap/scss/bootstrap";*/
+.bkg-rouge {
+  background-color: red;
+}
+.bkg-violet {
+  background-color: violet;
+}
+.bkg-vert {
+  background-color: green;
+}
+.bkg-vertfonce {
+  background-color: darkgreen;
+  color: white;
+}
+.bkg-vertclair {
+  background-color: lightgreen;
+}
+.bkg-jaune {
+  background-color: yellow;
+}
+.bkg-bleu {
+  background-color: blue;
+  color: white;
+}
+.bkg-rose {
+  background-color: pink;
+}
+.bkg-purple {
+  background-color: purple;
+}
+.bkg-orange {
+  background-color: orange;
+}
+.bkg-marron {
+  /*background-color: brown;*/
+  background-color: /*bleuclair*/ lightskyblue;
+}
+.bkg-turquoise {
+  background-color: turquoise;
+}
+.bkg-noir {
+  background-color: black;
+  color: white;
+}
+.bkg-rougefonce {
+  background-color: darkred;
+  color: white;
+}
+.bkg-lavande {
+  background-color: #d0c1d6 !important;
+}

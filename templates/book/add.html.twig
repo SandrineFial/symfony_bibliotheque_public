@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un livre
+{% endblock %}
+
+{% block body %}
+
+	<div class="container mb-5">
+		<h1 class="mb-5">Ajouter un livre</h1>
+
+		{{ form_start(bookForm) }}
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.titre) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.titre, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.titre) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.auteur) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.auteur, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.auteur) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.isbn) }}<span class="small text-gris">L'image de couverture s'affiche gràce à l'ISBN</span>
+			</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.isbn, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.isbn) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.nbpages) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.nbpages, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.nbpages) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.resume) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.resume, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.resume) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.commentaire) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.commentaire, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.commentaire) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.note) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.note, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.note) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.theme) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.theme, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.theme) }}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-3 col-6">
+				<a href="/" class="btn btn-light">
+					<i class="fa fa-arrow-left"></i>
+					Retour à la liste des livres
+				</a>
+			</div>
+			<div class="col-md-9 col-6">
+				<button type="submit" class="btn bkg-lavande">
+					<i class="fa fa-save"></i>
+					Enregistrer
+				</button>
+			</div>
+		</div>
+		{{ form_end(bookForm) }}
+	{% endblock %}
