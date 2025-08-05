@@ -39,7 +39,7 @@ Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL*
 - [Twig](https://twig.symfony.com/)
 - [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
 - Base de données **MySQL**
-- API Couverture des livres : `https://couverture.geobib.fr/api/v1/`
+- API Couverture des livres : `https://couverture.geobib.fr`
 
 ---
 
