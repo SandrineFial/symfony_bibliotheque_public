@@ -73,5 +73,6 @@ symfony serve
 
 👨‍💻 Auteur
 Sandrine Fialon
-https://www.fialons-web.fr/
-Linkedin : https://www.linkedin.com/in/fialonsandrine/
+
+- https://www.fialons-web.fr/
+- Linkedin : https://www.linkedin.com/in/fialonsandrine/
