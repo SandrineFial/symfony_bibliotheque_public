@@ -33,7 +33,7 @@ Une application web développée avec **Symfony + Twig** permettant la gestion d
 
 ```bash
 # 1. Cloner le projet
-git clone https://github.com/SandrineFial/bibliotheque_sfy_public.git
+git clone https://github.com/SandrineFial/symfony_bibliotheque_public.git
 
 # 2. Aller dans le dossier
 cd symfony-bibliotheque-roudezet
