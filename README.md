@@ -1,11 +1,11 @@
 # 📚 Bibliothèque Roudézet - 2025
 
-Une application web développée avec **Symfony + Twig** permettant la gestion d'une bibliothèque en ligne :
+Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL**, migré vers **Symfony 6 + Twig** :
 
-- Connexion utilisateur
+- Récupération et mise à jour d'une **grosse base de données existante**
+- Refonte intégrale du site avec un code moderne, maintenable et sécurisé
+- Ajout d'une interface utilisateur claire et d'une **API externe** pour les couvertures de livres
 - CRUD complet sur les livres
-- Connexion à une base de données SQL
-- Intégration d'une **API externe** pour récupérer les couvertures de livres à partir de leur ISBN
 
 ---
 
@@ -15,7 +15,21 @@ Une application web développée avec **Symfony + Twig** permettant la gestion d
 - **CRUD des livres** (ajout, édition, suppression, liste)
 - Affichage des **couvertures de livres** via l’API :https://couverture.geobib.fr/api/v1/{{ book.isbn }}/small
 
-- Interface web générée avec **Twig** et **Bootstrap** (optionnel)
+- Interface web générée avec **Twig** et design responsive avec **Bootstrap**
+- Optimisation et **nettoyage de la base de données existante**
+
+---
+
+## 🔄 Contexte du projet
+
+- Ancien site : **PHP 5 + MySQL** avec code spaghetti non maintenable
+- Objectifs :
+
+1. **Sauvegarder et nettoyer** la base existante
+2. **Migrer les données** vers une structure compatible Doctrine
+3. **Refondre complètement** le site avec Symfony et une architecture MVC claire
+
+- Résultat : site moderne, sécurisé, et plus simple à faire évoluer
 
 ---
 
@@ -36,7 +50,7 @@ Une application web développée avec **Symfony + Twig** permettant la gestion d
 git clone https://github.com/SandrineFial/symfony_bibliotheque_public.git
 
 # 2. Aller dans le dossier
-cd symfony-bibliotheque-roudezet
+cd symfony_bibliotheque_public
 
 # 3. Installer les dépendances
 composer install
@@ -54,3 +68,10 @@ php bin/console doctrine:migrations:migrate
 symfony serve
 
 ```
+
+---
+
+👨‍💻 Auteur
+Sandrine Fialon
+https://www.fialons-web.fr/
+Linkedin : https://www.linkedin.com/in/fialonsandrine/
