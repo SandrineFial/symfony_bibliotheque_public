@@ -3,6 +3,7 @@
 ![Symfony](https://img.shields.io/badge/Symfony-6.0-000000?logo=symfony&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-5.7-4479A1?logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
 
 Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL**, migré vers **Symfony 6 + Twig** :
 
