@@ -12,6 +12,8 @@ Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL*
 - Ajout d'une interface utilisateur claire et d'une **API externe** pour les couvertures de livres
 - CRUD complet sur les livres
 
+> Projet développé avec l'assistance de **GitHub Copilot** pour optimiser la qualité du code et accélérer le développement.
+
 ---
 
 ## 🚀 Fonctionnalités
@@ -136,6 +138,8 @@ symfony serve -d
 
 ```
 
+---
+
 ## Teste qualité du code en local
 
 Linter Twig
@@ -152,11 +156,11 @@ Démarrer SonarQube
 Analyser le projet (depuis le dossier tests)
 `./analyze-project.sh`
 
-### 📸 Aperçu
+# 📸 Aperçu
 
-# Connexion utilisateur
+## Connexion utilisateur
 
-## ![Connexion utilisateur](./screenshots/login.png)
+![Connexion utilisateur](./screenshots/login.png)
 
 👨‍💻 Auteur
 Sandrine Fialon
