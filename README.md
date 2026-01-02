@@ -1,8 +1,8 @@
-# 📚 Bibliothèque Roudézet - 2025
+# 📚 Bibliothèque en ligne
 
-![Symfony](https://img.shields.io/badge/Symfony-6.0-000000?logo=symfony&logoColor=white)
+![Symfony](https://img.shields.io/badge/Symfony-7.2-000000?logo=symfony&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14-4169E1?logo=postgresql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
 
 Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL**, migré vers **Symfony 6 + Twig** avec base **PostgreSQL** :
@@ -147,24 +147,19 @@ PHP Stan / Psalm
 
 Démarrer SonarQube
 
-````cd tests
-./start-sonar.sh```
+`cd tests
+./start-sonar.sh`
 Analyser le projet (depuis le dossier tests)
 `./analyze-project.sh`
 
----
+### 📸 Aperçu
 
-## 📸 Aperçu
+# Connexion utilisateur
 
-### Connexion utilisateur
-
-![Connexion utilisateur](./screenshots/login.png)
----
-
+## ![Connexion utilisateur](./screenshots/login.png)
 
 👨‍💻 Auteur
 Sandrine Fialon
 
 - https://www.fialons-web.fr/
 - Linkedin : https://www.linkedin.com/in/fialonsandrine/
-````
