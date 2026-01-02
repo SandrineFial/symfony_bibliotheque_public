@@ -32,6 +32,9 @@ RUN { \
     echo 'realpath_cache_ttl=600'; \
     } > /usr/local/etc/php/conf.d/opcache.ini
 
+# Forcer l'utilisation d'IPv4 pour résoudre les problèmes de connectivité Supabase
+RUN echo 'precedence ::ffff:0:0/96  100' >> /etc/gai.conf
+
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

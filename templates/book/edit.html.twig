@@ -69,7 +69,7 @@
 				{% if oldValues.resume is defined %}
 					<div class="text-danger" style="font-size:0.9em;">
 						Ancienne valeur :
-						<em>{{ oldValues.resume }}</em>
+						<em>{{ oldValues.resume|clean_text }}</em>
 					</div>
 				{% endif %}
 			</div>
@@ -82,7 +82,7 @@
 				{% if oldValues.commentaire is defined %}
 					<div class="text-danger" style="font-size:0.9em;">
 						Ancienne valeur :
-						<em>{{ oldValues.commentaire }}</em>
+						<em>{{ oldValues.commentaire|clean_text }}</em>
 					</div>
 				{% endif %}
 			</div>
@@ -236,10 +236,10 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<p>Tire :
-							{{book.titre}}
+						<p>Titre :
+							{{ book.titre|clean_text }}
 							<br/>Auteur :
-							{{book.auteur}}
+							{{ book.auteur|clean_text }}
 						</p>
 						<p>
 							Êtes-vous sûr de vouloir supprimer ce livre ?<br/>Cette action est irréversible.

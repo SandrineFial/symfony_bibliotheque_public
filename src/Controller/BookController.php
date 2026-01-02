@@ -8,6 +8,7 @@ use App\Entity\Themes;
 use App\Entity\SousThemes;
 use App\Form\BookFormType;
 use App\Repository\BooksRepository;
+use App\Service\PdfGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -679,5 +680,106 @@ private function findOrCreateSousTheme(EntityManagerInterface $entityManager, st
     
     return $sousTheme;
 }
+
+    #[Route('/books/export-pdf', name: 'books_export_pdf')]
+    public function exportSearchResultsToPdf(
+        Request $request,
+        ManagerRegistry $doctrine,
+        PdfGeneratorService $pdfGenerator
+    ): Response {
+        $user = $this->getUser();
+        if ($user === null) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        /** @var BooksRepository $booksRepo */
+        $booksRepo = $doctrine->getRepository(Books::class);
+        
+        // Récupération des paramètres de recherche depuis la requête
+        $search = $request->query->get('q', '');
+        $searchType = $request->query->get('type', '');
+        $themeId = $request->query->get('theme');
+        $sousThemeId = $request->query->get('sousTheme');
+        
+        $theme = null;
+        $sousTheme = null;
+        
+        if ($themeId) {
+            $theme = $doctrine->getRepository(Themes::class)->find($themeId);
+            if ($theme && $theme->getUser() !== $user) {
+                throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce thème.');
+            }
+        }
+        
+        if ($sousThemeId) {
+            $sousTheme = $doctrine->getRepository(SousThemes::class)->find($sousThemeId);
+            if ($sousTheme && ($sousTheme->getTheme()->getUser() !== $user)) {
+                throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce sous-thème.');
+            }
+        }
+        
+        // Exécution de la recherche
+        $allBooks = $booksRepo->searchBooks($search, $user, $searchType, $theme, $sousTheme);
+        
+        // Calcul des statistiques
+        $totalBooks = count($allBooks);
+        $uniqueAuthors = count(array_unique(array_map(fn($book) => $book->getAuteur(), $allBooks)));
+        
+        // Génération du PDF
+        $pdfContent = $pdfGenerator->generateSearchResultsPdf(
+            $allBooks,
+            $search,
+            $searchType,
+            $totalBooks,
+            $uniqueAuthors
+        );
+        
+        // Génération du nom de fichier
+        $fileName = $this->generatePdfFileName($search, $searchType, $theme, $sousTheme);
+        
+        return new Response(
+            $pdfContent,
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                'Content-Length' => strlen($pdfContent)
+            ]
+        );
+    }
+    
+    private function generatePdfFileName(
+        string $search,
+        string $searchType,
+        ?Themes $theme,
+        ?SousThemes $sousTheme
+    ): string {
+        $parts = ['bibliotheque'];
+        
+        if ($sousTheme) {
+            $parts[] = 'sous-theme-' . $this->slugify($sousTheme->getName());
+        } elseif ($theme) {
+            $parts[] = 'theme-' . $this->slugify($theme->getName());
+        }
+        
+        if (!empty($search)) {
+            $typePrefix = $searchType ? $searchType . '-' : '';
+            $parts[] = 'recherche-' . $typePrefix . $this->slugify($search);
+        }
+        
+        $parts[] = date('Y-m-d');
+        
+        return implode('-', $parts) . '.pdf';
+    }
+    
+    private function slugify(string $text): string
+    {
+        // Suppression des accents et caractères spéciaux
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+        // Remplacement des espaces et caractères spéciaux par des tirets
+        $text = preg_replace('/[^a-zA-Z0-9]+/', '-', $text);
+        // Suppression des tirets en début et fin, et conversion en minuscules
+        return trim(strtolower($text), '-');
+    }
 
 }

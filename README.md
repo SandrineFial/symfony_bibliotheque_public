@@ -20,10 +20,11 @@ Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL*
 
 - **Authentification utilisateur** (inscription, connexion, déconnexion)
 - **CRUD des livres** (ajout, édition, suppression, liste)
-- Affichage des **couvertures de livres** via l’API :[https://covers.openlibrary.org/b/isbn/](https://covers.openlibrary.org/b/isbn/)
+- **Export PDF des résultats de recherche** avec récapitulatif et liste formatée des livres
+- Affichage des **couvertures de livres** via l'API :[https://covers.openlibrary.org/b/isbn/](https://covers.openlibrary.org/b/isbn/)
 - Chaque livre fait partie d'un thèmes, voir d'un sous-Thème (catégories) et appartient à un utilisateur
 - **CRUD des thèmes et sousThèmes** (ajout, édition, suppression, liste)
-
+- **Système de recherche avancée** (par titre, auteur ou édition)
 - Interface web générée avec **Twig** et design responsive avec **Bootstrap**
 - Optimisation et **nettoyage de la base de données existante**
 
@@ -47,6 +48,7 @@ Projet de **refonte complète** d'un ancien site en **PHP 5** avec base **MySQL*
 - [Symfony 6](https://symfony.com/)
 - [Twig](https://twig.symfony.com/)
 - [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
+- [DOMPDF](https://github.com/dompdf/dompdf) pour la génération de PDF
 - V1 : Base de données **MySQL** MariaDB
 - V2 : **PostgreSQL sur Supabase** (hébergement cloud, scalable, sécurisé)
 - Déploiement : **Docker sur Render** (conteneurisation automatique)
@@ -137,6 +139,33 @@ php bin/console doctrine:migrations:migrate
 symfony serve -d
 
 ```
+
+---
+
+## 📄 Export PDF
+
+L'application permet de générer des PDF avec la liste des livres trouvés lors d'une recherche.
+
+### Fonctionnalités PDF
+
+- **Bouton de téléchargement** automatiquement affiché après une recherche avec des résultats
+- **Format compact** : tableau avec numérotation, titre et auteur
+- **Récapitulatif de recherche** : terme recherché, type de recherche, nombre de livres et d'auteurs
+- **Nettoyage des caractères** : suppression automatique des caractères d'échappement indésirables
+- **Nom de fichier intelligent** : `bibliotheque-recherche-[terme]-[date].pdf`
+
+### Utilisation
+
+1. **Effectuer une recherche** sur la page principale
+2. **Cliquer sur "Télécharger PDF"** dans les résultats
+3. Le PDF se télécharge automatiquement avec la liste formatée
+
+### Technologie
+
+- **DOMPDF** pour la génération
+- **Service dédié** `PdfGeneratorService` pour la logique
+- **Extension Twig** `clean_text` pour le nettoyage des données
+- **Route dédiée** `/books/export-pdf` avec paramètres de recherche
 
 ---
 

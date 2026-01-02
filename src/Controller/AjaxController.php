@@ -25,10 +25,28 @@ class AjaxController extends AbstractController
         foreach ($sousThemes as $sousTheme) {
             $data[] = [
                 'id' => $sousTheme->getId(),
-                'name' => $sousTheme->getName()
+                'name' => $this->cleanString($sousTheme->getName())
             ];
         }
         
         return new JsonResponse($data);
+    }
+    
+    private function cleanString(?string $text): string
+    {
+        if ($text === null) {
+            return '';
+        }
+        
+        // Décode les entités HTML
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        
+        // Supprime les balises HTML si présentes
+        $text = strip_tags($text);
+        
+        // Échappe à nouveau seulement les caractères nécessaires pour l'affichage
+        $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8', false);
+        
+        return $text;
     }
 }

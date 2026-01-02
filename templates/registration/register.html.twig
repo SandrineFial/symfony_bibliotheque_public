@@ -15,18 +15,54 @@
 					<div class="card-header">
 						<h1 class="h3 mb-3 font-weight-normal text-center">Créer un compte</h1>
 					</div>
-					<div class="card-body">
+					<div
+						class="card-body">
+						{# Affichage des messages flash #}
+						{% for message in app.flashes('success') %}
+							<div class="alert alert-success">{{ message }}</div>
+						{% endfor %}
+						{% for message in app.flashes('error') %}
+							<div class="alert alert-danger">{{ message }}</div>
+						{% endfor %}
+
 						{{ form_start(registrationForm) }}
 						<div class="mb-3">
 							{{ form_row(registrationForm.email) }}
+							{% if registrationForm.email.vars.errors %}
+								{% for error in registrationForm.email.vars.errors %}
+									<div class="text-danger">{{ error.message }}</div>
+								{% endfor %}
+							{% endif %}
 						</div>
 
 						<div class="mb-3">
-							{{ form_row(registrationForm.plainPassword.first) }}
+							<label for="password_first">{{ registrationForm.plainPassword.first.vars.label }}</label>
+							<div class="input-group">
+								{{ form_widget(registrationForm.plainPassword.first) }}
+								<button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+									<i class="fa fa-eye" id="eyeIcon1"></i>
+								</button>
+							</div>
+							{% if registrationForm.plainPassword.first.vars.errors %}
+								{% for error in registrationForm.plainPassword.first.vars.errors %}
+									<div class="text-danger">{{ error.message }}</div>
+								{% endfor %}
+							{% endif %}
 						</div>
 
 						<div class="mb-3">
-							{{ form_row(registrationForm.plainPassword.second) }}
+							<label for="password_second">{{ registrationForm.plainPassword.second.vars.label }}</label>
+							<div class="input-group">
+								{{ form_widget(registrationForm.plainPassword.second) }}
+								<button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+									<i class="fa fa-eye" id="eyeIcon2"></i>
+								</button>
+							</div>
+							{% if registrationForm.plainPassword.second.vars.errors %}
+								{% for error in registrationForm.plainPassword.second.vars.errors %}
+									<div class="text-danger">{{ error.message }}</div>
+								{% endfor %}
+							{% endif %}
 						</div>
 
 
@@ -47,4 +83,50 @@
 			Répertorier tous vos livres dans cette bibliothèque virtuelle pour les retrouver facilement.
 		</div>
 	</div>
+
+	<script>
+		// Attendre que le DOM soit chargé
+document.addEventListener('DOMContentLoaded', function () { // Toggle pour le premier champ de mot de passe
+const toggleButton1 = document.getElementById('togglePassword1');
+if (toggleButton1) {
+toggleButton1.addEventListener('click', function () { // Chercher le champ de mot de passe dans le même input-group
+const passwordField = this.parentElement.querySelector('input[type="password"], input[type="text"]');
+const eyeIcon = document.getElementById('eyeIcon1');
+
+if (passwordField && eyeIcon) {
+if (passwordField.type === 'password') {
+passwordField.type = 'text';
+eyeIcon.classList.remove('fa-eye');
+eyeIcon.classList.add('fa-eye-slash');
+} else {
+passwordField.type = 'password';
+eyeIcon.classList.remove('fa-eye-slash');
+eyeIcon.classList.add('fa-eye');
+}
+}
+});
+}
+
+// Toggle pour le second champ de mot de passe
+const toggleButton2 = document.getElementById('togglePassword2');
+if (toggleButton2) {
+toggleButton2.addEventListener('click', function () { // Chercher le champ de mot de passe dans le même input-group
+const passwordField = this.parentElement.querySelector('input[type="password"], input[type="text"]');
+const eyeIcon = document.getElementById('eyeIcon2');
+
+if (passwordField && eyeIcon) {
+if (passwordField.type === 'password') {
+passwordField.type = 'text';
+eyeIcon.classList.remove('fa-eye');
+eyeIcon.classList.add('fa-eye-slash');
+} else {
+passwordField.type = 'password';
+eyeIcon.classList.remove('fa-eye-slash');
+eyeIcon.classList.add('fa-eye');
+}
+}
+});
+}
+});
+	</script>
 {% endblock %}

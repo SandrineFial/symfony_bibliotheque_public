@@ -97,13 +97,26 @@
 				{% else %}
 
 					{% if totalBooks is defined %}
-						<p>
-							{% if totalBooks > 0 %}
-								{{ totalBooks }}
-								livre{{ totalBooks > 1 ? 's' : '' }}
-								{{ q is defined and q ? 'trouvés' : 'dans la bibliothèque' }}
+						<div class="d-flex justify-content-between align-items-center mb-3">
+							<p class="mb-0">
+								{% if totalBooks > 0 %}
+									{{ totalBooks }}
+									livre{{ totalBooks > 1 ? 's' : '' }}
+									{{ q is defined and q ? 'trouvés' : 'dans la bibliothèque' }}
+									{% if nbauteurs is defined and nbauteurs > 0 %}
+										({{ nbauteurs }}
+										auteur{{ nbauteurs > 1 ? 's différents' : ' différent' }})
+									{% endif %}
+								{% endif %}
+							</p>
+
+							{% if totalBooks is defined and totalBooks > 0 %}
+								<a href="{{ path('books_export_pdf', app.request.query.all) }}" class="btn btn-outline-primary btn-sm" title="Télécharger la liste en PDF">
+									<i class="fa fa-file-pdf-o"></i>
+									Télécharger PDF
+								</a>
 							{% endif %}
-						</p>
+						</div>
 					{% endif %}
 				{% endif %}
 
@@ -144,16 +157,16 @@
 								{% if book.isbn is not empty %}
 									<img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn|replace({'-': '', ' ': ''}) }}-M.jpg?default=false" alt="{{ book.isbn }}" class="text-center m-auto img-hover book-cover" data-fallback="{{ asset('livre-no-isbn.png') }}" style="width:60px;"/>
 								{% else %}
-									<img src="{{ asset('livre-no-isbn.png') }}" alt="{{ book.titre }}" class="text-center m-auto img-hover" style="width:60px;"/>
+									<img src="{{ asset('livre-no-isbn.png') }}" alt="{{ book.titre|clean_text }}" class="text-center m-auto img-hover" style="width:60px;"/>
 								{% endif %}
 							</a>
 							<div class="card-body text-center">
 								<a href="{{ path('app_book_edit', linkParams) }}" class="text-dark">
 									<p class="card-title">
-										<strong>{{ book.titre }}</strong>
+										<strong>{{ book.titre|clean_text }}</strong>
 									</p>
 
-									<p class="card-text">{{ book.auteur }}</p>
+									<p class="card-text">{{ book.auteur|clean_text }}</p>
 								</a>
 							</div>
 							{% if book.note is not empty %}
