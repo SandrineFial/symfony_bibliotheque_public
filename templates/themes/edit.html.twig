@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le nom de la Catégorie
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier le nom de la catégorie</h1>
+
+	{% for type, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
+
+	<form action="{{ path('admin_edit_theme', {'id': theme.id}) }}" method="post">
+		<div class="mb-3">
+			<label for="theme_name" class="form-label">Nom de la catégorie</label>
+			<input type="text" id="theme_name" name="theme_name" class="form-control" value="{{ theme.name }}" required>
+		</div>
+		<a href="{{ path('admin_themes') }}" class="btn btn-light">
+			<i class="fa fa-arrow-left"></i>
+			Annuler</a>
+
+		<button type="button" class="btn bg-light" onclick="confirmDelete()">
+			<i class="fa fa-trash"></i>
+			Supprimer
+		</button>
+		<button type="submit" class="btn bkg-lavande">
+			<i class="fa fa-save"></i>
+			Enregistrer</button>
+	</form>
+	<script>
+		function confirmDelete() {
+$('#deleteModal').modal('show');
+}
+	</script>
+
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer cette catégorie ?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+					<form action="{{ path('admin_delete_theme', {'id': theme.id}) }}" method="post" style="display:inline;">
+						<button type="submit" class="btn btn-danger">Supprimer</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

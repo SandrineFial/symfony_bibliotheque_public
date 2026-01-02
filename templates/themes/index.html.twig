@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Catégories
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-4">
+		<h1>Gestion des Catégories et Sous-catégories</h1>
+
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+
+		<nav class="row navbar navbar-expand-lg my-4 px-0" data-bs-theme="light">
+			<div class="container-fluid bg-light">
+
+				<div class="btn-group" role="group" aria-label="Basic example">
+					<a href="/" class="btn bg-info text-white">
+						<i class="fa fa-book"></i>
+						Tous mes livres
+					</a>
+					<a href="/book_add" class="btn bg-info text-white hover-white">
+						<i class="fa-solid fa-plus-circle"></i>
+						Ajouter un livre</a>
+
+				</div>
+
+			</div>
+		</nav>
+
+		<div
+			class="row">
+			<!-- Formulaire d'ajout de thème -->
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<h5>Ajouter une Catégorie</h5>
+					</div>
+					<div class="card-body">
+						<form action="{{ path('admin_add_theme') }}" method="post">
+							<div class="mb-3">
+								<label for="theme_name" class="form-label">Nom de la catégorie</label>
+								<input type="text" class="form-control" id="theme_name" name="theme_name" required>
+							</div>
+							<button type="submit" class="btn bkg-lavande text-dark ">
+								<i class="fa fa-save"></i>
+								Ajouter la catégorie
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Formulaire d'ajout de sous-thème -->
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<h5>Ajouter un Sous-Catégorie</h5>
+					</div>
+					<div class="card-body">
+						<form action="{{ path('admin_add_sous_theme') }}" method="post">
+							<div class="mb-3">
+								<label for="theme_id" class="form-label">Catégorie parente</label>
+								<select class="form-control" id="theme_id" name="theme_id" required>
+									<option value="">Sélectionner une catégorie</option>
+									{% for item in themes %}
+										<option value="{{ item.theme.id }}">{{ item.theme.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="sous_theme_name" class="form-label">Nom de la sous-catégorie</label>
+								<input type="text" class="form-control" id="sous_theme_name" name="sous_theme_name" required>
+							</div>
+							<button type="submit" class="btn bkg-lavande text-dark ">
+								<i class="fa fa-save"></i>
+								Ajouter la sous-catégorie</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- À ajouter dans votre fichier themes/index.html.twig -->
+		<div class="card mt-4">
+			<div class="card-header">
+				<h5>Importer des catégories depuis un fichier CSV</h5>
+			</div>
+			<div class="card-body">
+				<form action="{{ path('admin_import_themes_csv') }}" method="post" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label for="csv_file" class="form-label">Fichier CSV</label>
+						<input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+						<div class="form-text">
+							Format attendu : Catégorie, Sous-catégorie (une ligne par sous-catégorie)
+						</div>
+					</div>
+					<button type="submit" class="btn bkg-lavande text-dark ">
+						<i class="fa fa-save"></i>
+						Importer</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Liste des thèmes -->
+		<div class="mt-4">
+			<h3>Catégories existantes</h3>
+			{% if themes is defined and themes|length > 0 %}
+				<p>Voici la liste des catégories existantes :</p>
+				{% for item in themes %}
+					<div class="card mb-3">
+						<div class="card-header">
+							<strong>
+								{{ item.theme.name }}</strong>
+							<a href="{{ path('admin_edit_theme', {id: item.theme.id}) }}" class="btn btn-sm btn-outline-secondary ms-2" title="Éditer">
+								<i class="fa fa-pencil"></i>
+							</a>
+						</div>
+						<div class="card-body">
+							{% if item.sousThemes|length > 0 %}
+								<ul class="">
+									{% for sousTheme in item.sousThemes %}
+										<li class="">{{ sousTheme.name }}
+
+											<a href="{{ path('admin_edit_sous_theme', {id: sousTheme.id}) }}" class="btn btn-sm btn-outline-secondary ms-2" title="Éditer">
+												<i class="fa fa-pencil"></i>
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+								{% else %}
+
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<p>Aucune catégorie trouvée.</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

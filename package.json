@@ -1,6 +1,6 @@
 {
-  "name": "symfony_bibliotheque_public",
-  "version": "1.0.0",
+  "name": "bibliotheque_sfy",
+  "version": "3.0.2",
   "private": true,
   "scripts": {
     "dev": "encore dev",
@@ -12,7 +12,6 @@
     "@popperjs/core": "^2.11.8",
     "@symfony/stimulus-bridge": "^3.2.0 || ^4.0.0",
     "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
-    "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
     "@symfony/webpack-encore": "^5.1.0",
     "bootstrap": "^5.3.6",
     "jquery": "^3.7.1"

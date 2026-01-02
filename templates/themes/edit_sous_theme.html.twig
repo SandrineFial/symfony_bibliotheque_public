@@ -1,0 +1,67 @@
+{# filepath: /Users/artemis/Web/bibliotheque_sfy/templates/themes/edit_sous_theme.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la sous-catégorie
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier la sous-catégorie</h1>
+
+	{% for type, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
+
+	<p class="text-muted">Catégorie parente :
+		{{ sousTheme.theme.name }}</p>
+
+	<form action="{{ path('admin_edit_sous_theme', {'id': sousTheme.id}) }}" method="post">
+		<div class="mb-3">
+			<label for="sous_theme_name" class="form-label">Nom de la sous-catégorie</label>
+			<input type="text" id="sous_theme_name" name="sous_theme_name" class="form-control" value="{{ sousTheme.name }}" required>
+		</div>
+		<a href="{{ path('admin_themes') }}" class="btn btn-light">
+			<i class="fa fa-arrow-left"></i>
+			Annuler
+		</a>
+		<button type="button" class="btn bg-light" onclick="confirmDelete()">
+			<i class="fa fa-trash"></i>
+			Supprimer
+		</button>
+		<button type="submit" class="btn bkg-lavande">
+			<i class="fa fa-save"></i>
+			Enregistrer
+		</button>
+	</form>
+
+	<script>
+		function confirmDelete() {
+$('#deleteModal').modal('show');
+}
+	</script>
+
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer cette sous-catégorie ?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+					<form action="{{ path('admin_delete_sous_theme', {'id': sousTheme.id}) }}" method="post" style="display:inline;">
+						<button type="submit" class="btn btn-danger">Supprimer</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

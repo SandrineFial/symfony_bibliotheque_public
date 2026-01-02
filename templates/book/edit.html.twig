@@ -8,6 +8,17 @@
 	<div class="container mb-5">
 		<h1 class="mb-5">Modifier un livre</h1>
 
+		{% for label, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			{% endfor %}
+		{% endfor %}
+
 		{{ form_start(bookForm) }}
 		<div class="row align-items-center mb-3">
 			<div class="col-md-3">{{ form_label(bookForm.titre) }}</div>
@@ -29,13 +40,25 @@
 			<div class="col-md-9">
 				{{ form_widget(bookForm.isbn, {'attr': {'class': 'form-control'}}) }}
 				{{ form_errors(bookForm.isbn) }}
+				{% if oldValues.isbn is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.isbn }}</em>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		<div class="row align-items-center mb-3">
 			<div class="col-md-3">{{ form_label(bookForm.nbpages) }}</div>
 			<div class="col-md-9">
-				{{ form_widget(bookForm.nbpages, {'attr': {'class': 'form-control'}}) }}
+				{{ form_widget(bookForm.nbpages, {'attr': {'class': 'form-control'}, 'type': 'number'}) }}
 				{{ form_errors(bookForm.nbpages) }}
+				{% if oldValues.nbpages is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.nbpages }}</em>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		<div class="row align-items-center mb-3">
@@ -43,6 +66,12 @@
 			<div class="col-md-9">
 				{{ form_widget(bookForm.resume, {'attr': {'class': 'form-control'}}) }}
 				{{ form_errors(bookForm.resume) }}
+				{% if oldValues.resume is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.resume }}</em>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		<div class="row align-items-center mb-3">
@@ -50,6 +79,12 @@
 			<div class="col-md-9">
 				{{ form_widget(bookForm.commentaire, {'attr': {'class': 'form-control'}}) }}
 				{{ form_errors(bookForm.commentaire) }}
+				{% if oldValues.commentaire is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.commentaire }}</em>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		<div class="row align-items-center mb-3">
@@ -64,15 +99,121 @@
 			<div class="col-md-9">
 				{{ form_widget(bookForm.theme, {'attr': {'class': 'form-control'}}) }}
 				{{ form_errors(bookForm.theme) }}
+				{% if oldValues.theme is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.theme }}</em>
+					</div>
+				{% endif %}
 			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.sousTheme) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.sousTheme, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.sousTheme) }}
+				{% if oldValues.sousTheme is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.sousTheme }}</em>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.type) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.type, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.type) }}
+				{% if oldValues.type is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.type }}</em>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.edition) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.edition, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.edition) }}
+				{% if oldValues.edition is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.edition }}</em>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.editionDetail) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.editionDetail, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.editionDetail) }}
+				{% if oldValues.editionDetail is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.editionDetail }}</em>
+					</div>
+				{% endif %}
+			</div>
+
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.annees) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.annees, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.annees) }}
+				{% if oldValues.annees is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.annees }}</em>
+					</div>
+				{% endif %}
+			</div>
+
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.etat) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.etat, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.etat) }}
+				{% if oldValues.etat is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.etat }}</em>
+					</div>
+				{% endif %}
+			</div>
+
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.aQui) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.aQui, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.aQui) }}
+				{% if oldValues.aQui is defined %}
+					<div class="text-danger" style="font-size:0.9em;">
+						Ancienne valeur :
+						<em>{{ oldValues.aQui }}</em>
+					</div>
+				{% endif %}
+			</div>
+
 		</div>
 
 		<div class="row">
 			<div class="col-md-3 col-6">
-				<a href="/" class="btn btn-light">
+				<a href="{{ lienretour }}" class="btn btn-light">
 					<i class="fa fa-arrow-left"></i>
 					Annuler
 				</a>
+				<button type="button" class="btn bg-light" onclick="confirmDelete()">
+					<i class="fa fa-trash"></i>
+					Supprimer
+				</button>
 			</div>
 			<div class="col-md-9 col-6">
 				<button type="submit" class="btn bkg-lavande">
@@ -82,4 +223,70 @@
 			</div>
 		</div>
 		{{ form_end(bookForm) }}
+
+
+		<!-- Modal de confirmation de suppression -->
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Tire :
+							{{book.titre}}
+							<br/>Auteur :
+							{{book.auteur}}
+						</p>
+						<p>
+							Êtes-vous sûr de vouloir supprimer ce livre ?<br/>Cette action est irréversible.
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+						<form method="post" action="{{ path('book_delete', {'id': book.id}) }}" style="display: inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ book.id) }}">
+							<button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			function confirmDelete() {
+$('#deleteModal').modal('show');
+}
+document.addEventListener('DOMContentLoaded', function () {
+const themeSelect = document.getElementById('book_form_theme');
+const sousThemeSelect = document.getElementById('book_form_sousTheme');
+
+themeSelect.addEventListener('change', function () {
+const themeId = this.value;
+
+// Réinitialiser le sous-thème
+sousThemeSelect.innerHTML = '<option value="">Sélectionnez un sous-thème</option>';
+
+if (themeId) { // Activer le select des sous-thèmes
+sousThemeSelect.disabled = false;
+
+// Récupérer les sous-thèmes via AJAX
+fetch (`/get-sous-themes?themeId=${themeId}`).then(response => response.json()).then(data => {
+data.forEach(sousTheme => {
+const option = document.createElement('option');
+option.value = sousTheme.id;
+option.textContent = sousTheme.name;
+sousThemeSelect.appendChild(option);
+});
+}).catch(error => console.error('Erreur:', error));
+} else { // Désactiver le select des sous-thèmes si aucun thème sélectionné
+sousThemeSelect.disabled = true;
+sousThemeSelect.innerHTML = '<option value="">Sélectionnez d\'abord un thème</option>';
+}
+});
+});
+		</script>
 	{% endblock %}

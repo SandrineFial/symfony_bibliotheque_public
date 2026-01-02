@@ -8,6 +8,14 @@
 	<div class="container mb-5">
 		<h1 class="mb-5">Ajouter un livre</h1>
 
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+
 		{{ form_start(bookForm) }}
 		<div class="row align-items-center mb-3">
 			<div class="col-md-3">{{ form_label(bookForm.titre) }}</div>
@@ -24,7 +32,8 @@
 			</div>
 		</div>
 		<div class="row align-items-center mb-3">
-			<div class="col-md-3">{{ form_label(bookForm.isbn) }}<span class="small text-gris">L'image de couverture s'affiche gràce à l'ISBN</span>
+			<div class="col-md-3">{{ form_label(bookForm.isbn) }}
+				<br/><span class="small text-gris">L'image de couverture s'affiche gràce à l'ISBN</span>
 			</div>
 			<div class="col-md-9">
 				{{ form_widget(bookForm.isbn, {'attr': {'class': 'form-control'}}) }}
@@ -34,7 +43,7 @@
 		<div class="row align-items-center mb-3">
 			<div class="col-md-3">{{ form_label(bookForm.nbpages) }}</div>
 			<div class="col-md-9">
-				{{ form_widget(bookForm.nbpages, {'attr': {'class': 'form-control'}}) }}
+				{{ form_widget(bookForm.nbpages, {'attr': {'class': 'form-control'}, 'type': 'number'}) }}
 				{{ form_errors(bookForm.nbpages) }}
 			</div>
 		</div>
@@ -66,12 +75,60 @@
 				{{ form_errors(bookForm.theme) }}
 			</div>
 		</div>
-
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.sousTheme) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.sousTheme, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.sousTheme) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.type) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.type, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.type) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.edition) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.edition, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.edition) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.editionDetail) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.editionDetail, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.editionDetail) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.annees) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.annees, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.annees) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.etat) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.etat, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.etat) }}
+			</div>
+		</div>
+		<div class="row align-items-center mb-3">
+			<div class="col-md-3">{{ form_label(bookForm.aQui) }}</div>
+			<div class="col-md-9">
+				{{ form_widget(bookForm.aQui, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(bookForm.aQui) }}
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-md-3 col-6">
 				<a href="/" class="btn btn-light">
 					<i class="fa fa-arrow-left"></i>
-					Retour à la liste des livres
+					Annuler
 				</a>
 			</div>
 			<div class="col-md-9 col-6">
@@ -82,4 +139,36 @@
 			</div>
 		</div>
 		{{ form_end(bookForm) }}
+
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+const themeSelect = document.getElementById('book_form_theme');
+const sousThemeSelect = document.getElementById('book_form_sousTheme');
+
+themeSelect.addEventListener('change', function () {
+const themeId = this.value;
+
+// Réinitialiser le sous-thème
+sousThemeSelect.innerHTML = '<option value="">Sélectionnez un sous-thème</option>';
+
+if (themeId) { // Activer le select des sous-thèmes
+sousThemeSelect.disabled = false;
+
+// Récupérer les sous-thèmes via AJAX
+fetch (`/get-sous-themes?themeId=${themeId}`).then(response => response.json()).then(data => {
+data.forEach(sousTheme => {
+const option = document.createElement('option');
+option.value = sousTheme.id;
+option.textContent = sousTheme.name;
+sousThemeSelect.appendChild(option);
+});
+}).catch(error => console.error('Erreur:', error));
+} else { // Désactiver le select des sous-thèmes si aucun thème sélectionné
+sousThemeSelect.disabled = true;
+sousThemeSelect.innerHTML = '<option value="">Sélectionnez d\'abord un thème</option>';
+}
+});
+});
+		</script>
 	{% endblock %}

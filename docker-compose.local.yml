@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=${APP_ENV:-prod}
+      - APP_DEBUG=${APP_DEBUG:-0}
+      - APP_SECRET=${APP_SECRET}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-bibliotheque}?sslmode=disable
+      - MERCURE_URL=${MERCURE_URL:-https://mercure.rocks/.well-known/mercure}
+      - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL:-https://mercure.rocks/.well-known/mercure}
+      - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./var/log:/var/www/html/var/log
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-bibliotheque}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

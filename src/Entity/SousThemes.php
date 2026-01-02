@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\SousThemesRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: SousThemesRepository::class)]
-#[Broadcast]
 class SousThemes
 {
     #[ORM\Id]
@@ -15,18 +14,20 @@ class SousThemes
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $name;
 
-    #[ORM\Column]
-    private ?int $theme_id = null;
+    // Relation ManyToOne avec Themes
+    #[ORM\ManyToOne(targetEntity: Themes::class, inversedBy: 'sousThemes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Themes $theme = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -38,15 +39,14 @@ class SousThemes
         return $this;
     }
 
-    public function getThemeId(): ?int
+    public function getTheme(): ?Themes
     {
-        return $this->theme_id;
+        return $this->theme;
     }
 
-    public function setThemeId(int $theme_id): static
+    public function setTheme(?Themes $theme): static
     {
-        $this->theme_id = $theme_id;
-
+        $this->theme = $theme;
         return $this;
     }
 }

@@ -4,133 +4,259 @@
 
 {% block body %}
 	<div class="container my-5">
-		<div class="row">
-			<div class="col">
-				<h1 class="mb-5">Ma Bibliothèque en ligne</h1>
 
-				{% if app.user %}
-					<div>
+		<h1>Ma Bibliothèque en ligne</h1>
 
-						<div class="row">
-							<a href="/" class="badge badge-light col border" style="cursor:pointer; text-decoration:none;">
-								Tous les livres
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endfor %}
 
-								{% if totalBooks is defined %}
-									{% if totalBooks > 0 %}
-										<br/>
-										({{ totalBooks }})
-									{% endif %}
-								{% endif %}
-							</a>
-							{% for theme in themes %}
-								<a href="{{ path('books_by_theme', {'id': theme.id}) }}" class="badge badge-light col border" style="cursor:pointer; text-decoration:none;">
-									{{ theme.name }}
-									{% if theme.bookCount > 0 %}
-										<br/>
-										({{ theme.bookCount }})
-									{% endif %}
-								</a>
-							{% endfor %}
-						</div>
-						<h2 class="pt-5">Mes livres
-							<a href="/book_add" class="btn bkg-lavande text-secondary">
-								<i class="fa-solid fa-plus-circle"></i>
-								Ajouter un livre</a>
-						</h2>
+		{% if app.user %}
 
-						{% if theme is defined %}
-							<div class="alert alert-info">
-								Catégorie :
-								<strong>{{ theme.name }}</strong>
-								contient
-								{{ theme.bookCount }}
-								livre{{ theme.bookCount > 1 ? 's' : '' }}.
-							</div>
-						{% else %}
+			<nav class="row navbar navbar-expand-lg my-4 px-0" data-bs-theme="light">
+				<div class="container-fluid bg-light">
 
-							{% if totalBooks is defined %}
-								<div class="alert alert-info">
-									{% if totalBooks > 0 %}
-										{{ totalBooks }}
-										livre{{ totalBooks > 1 ? 's' : '' }}
-										dans la Bibliothèque
-									{% endif %}
-								</div>
+					<div class="btn-group" role="group" aria-label="Basic example">
+						<a href="/" class="btn bkg-lavande text-dark hover-white">
+							<i class="fa fa-book"></i>
+							Tous mes livres
+						</a>
+						<a href="/book_add" class="btn bkg-lavande text-dark hover-white">
+							<i class="fa-solid fa-plus-circle"></i>
+							Ajouter un livre</a>
+
+						<a href="/admin" class="btn bkg-lavande text-dark ">
+							<i class="fa-solid fa-plus-circle"></i>
+							<i class="fa fa-pencil"></i>
+							Catégories</a>
+					</div>
+
+					<form method="get" action="/book" class="d-flex" role="search">
+						<input type="text" name="q" class="form-control me-2" placeholder="Rechercher un livre..." value="{{ q|default('') }}">
+						<select class="form-select me-2" name="type" aria-label="Filtrer par">
+							<option value="auteur" {% if search_type is defined and search_type == 'auteur' %} selected {% endif %}>Auteur</option>
+							<option value="titre" {% if search_type is defined and search_type == 'titre' %} selected {% endif %}>Titre</option>
+							<option value="edition" {% if search_type is defined and search_type == 'edition' %} selected {% endif %}>Édition</option>
+						</select>
+						<button type="submit" class="btn bkg-lavande text-dark">
+							<i class="fa fa-search"></i>
+							Rechercher
+						</button>
+					</form>
+				</div>
+			</nav>
+			<div>
+
+				<div class="row">
+					{% for theme in themes %}
+						<a href="{{ path('books_by_theme', {'id': theme.id}) }}" class="btn btn-light col border{% if currentThemeId is defined and currentThemeId == theme.id %} bg-info text-white{% endif %}" style="cursor:pointer; text-decoration:none;">
+							{{ theme.name }}
+							{% if bookCounts[theme.id] > 0 %}
+								<span class="badge badge-secondary text-bg-secondary">
+									{{ bookCounts[theme.id] }}
+								</span>
 							{% endif %}
-						{% endif %}
-						{% if books is empty %}
-							<div class="alert alert-warning">
-								Aucun livre trouvé.
-							</div>
-						{% else %}
-							<form method="get" action="" class="form-inline mb-4">
-								<input type="text" name="q" class="form-control mr-2" placeholder="Rechercher un livre..." value="{{ q|default('') }}">
-								<button type="submit" class="btn btn-primary">
-									<i class="fa fa-search"></i>
-									Rechercher
-								</button>
-							</form>
-						{% endif %}
-						<div class="card-deck">
-							{% for book in books %}
-								<div class="card mb-2" style="max-width: 12rem;min-width: 12rem;">
-									<a href="/book_edit/{{book.id }}" class="w-full h-full text-center">
-										{% if book.isbn is not empty %}
-											<img src="https://couverture.geobib.fr/api/v1/{{ book.isbn }}/small" alt="{{ book.isbn }}" class="text-center m-auto img-hover-zoom" onerror="this.onerror=null;this.src='/livre-no-isbn.png';" style="width:60px;transition:width 0.3s;"/>
-										{% else %}
-											<img src="/livre-no-isbn.png" alt="{{ book.titre }}" class="text-center m-auto img-hover-zoom" style="width:60px;"/>
+						</a>
+					{% endfor %}
+
+				</div>
+
+				{% if sousThemes is defined and sousThemes|length > 0 %}
+					<div class="mb-4">
+						<strong>Sous-catégories :</strong>
+						<ul class="list-inline">
+							{% for sousTheme in sousThemes %}
+								<li class="list-inline-item mb-2">
+									<a href="{{ path('books_by_sous_theme', {'themeId': theme.id, 'sousThemeId': sousTheme.id}) }}" class="btn btn-outline-secondary btn-sm{% if currentSousThemeId is defined and currentSousThemeId == sousTheme.id %} bg-info text-white{% endif %}">
+										{{ sousTheme.name }}
+										{% if sousThemeBookCounts[sousTheme.id] is defined and sousThemeBookCounts[sousTheme.id] > 0 %}
+											<span class="badge badge-secondary text-bg-secondary">
+												{{ sousThemeBookCounts[sousTheme.id] }}
+											</span>
 										{% endif %}
 									</a>
-									<div class="card-body text-center">
-										<p class="card-title">
-											<strong>{{ book.titre }}</strong>
-										</p>
-
-										<p class="card-text">{{ book.auteur }}</p>
-
-									</div>
-									{% if book.note is not empty %}
-										<div class="card-footer text-center">
-											{% for i in 1..book.note %}
-												<i class="fa-solid fa-star text-warning"></i>
-											{% endfor %}
-											<br/><span class="small">{{book.theme ? book.theme.name : 'Aucun thème' }}</span>
-										</div>
-									{% endif %}
-								</div>
+								</li>
 							{% endfor %}
-						</div>
-
-						{# Pagination navigation #}
-						{% if totalPages is defined and totalPages > 1 %}
-							<nav aria-label="Pagination" class="mt-4">
-								<ul class="pagination justify-content-center">
-									{% set routeName = theme is defined ? 'books_by_theme' : 'app_home' %}
-									{# Page précédente #}
-									<li class="page-item{% if currentPage == 1 %} disabled{% endif %}">
-										<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', {'id': theme.id, 'page': currentPage - 1}) : path('app_home', {'page': currentPage - 1}) }}" tabindex="-1">&laquo;</a>
-									</li>
-									{# Liens vers chaque page #}
-									{% for p in 1..totalPages %}
-										<li class="page-item{% if p == currentPage %} active bkg-lavande{% endif %}">
-											<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', {'id': theme.id, 'page': p}) : path('app_home', {'page': p}) }}">{{ p }}</a>
-										</li>
-									{% endfor %}
-									{# Page suivante #}
-									<li class="page-item{% if currentPage == totalPages %} disabled{% endif %}">
-										<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', {'id': theme.id, 'page': currentPage + 1}) : path('app_home', {'page': currentPage + 1}) }}">&raquo;</a>
-									</li>
-								</ul>
-							</nav>
-						{% endif %}
-					</div>
-				{% else %}
-					<div class="alert alert-info">
-						Vous n'êtes pas connecté.
-						<a href="{{ path('app_login') }}" class="btn btn-sm btn-primary">Connexion</a>
+						</ul>
 					</div>
 				{% endif %}
+
+				<h2 class="mt-4">Mes livres</h2>
+
+				{% if theme is defined %}
+					<p>
+						<strong>{{ theme.name }}</strong>
+						contient
+						{{ bookCounts[theme.id] }}
+						{{ bookCounts[theme.id] > 1 ? 'livres' : 'livre' }}
+					</p>
+				{% else %}
+
+					{% if totalBooks is defined %}
+						<p>
+							{% if totalBooks > 0 %}
+								{{ totalBooks }}
+								livre{{ totalBooks > 1 ? 's' : '' }}
+								{{ q is defined and q ? 'trouvés' : 'dans la bibliothèque' }}
+							{% endif %}
+						</p>
+					{% endif %}
+				{% endif %}
+
+
+				{% if books is empty %}
+					<p>Aucun livre trouvé.</p>
+					{% else %}
+				{% endif %}
+
+
+				<div class="card-deck">
+					{% for book in books %}
+						<div
+							class="card mb-2" style="max-width: 12rem;min-width: 12rem;">
+							{# Prépare les paramètres de recherche pour le lien #}
+							{% set linkParams = {
+								'id': book.id
+							} %}
+							{% if search_type is defined and search_type %}
+								{% set linkParams = linkParams|merge({'type': search_type}) %}
+							{% endif %}
+							{% if q is defined and q %}
+								{% set linkParams = linkParams|merge({'q': q}) %}
+							{% endif %}
+							{% if currentPage is defined and currentPage %}
+								{% set linkParams = linkParams|merge({'page': currentPage}) %}
+							{% endif %}
+							{% if theme is defined and theme %}
+								{% set linkParams = linkParams|merge({'theme': theme.id}) %}
+							{% endif %}
+							{% if currentSousThemeId is defined and currentSousThemeId %}
+								{% set linkParams = linkParams|merge({'soustheme': currentSousThemeId}) %}
+							{% endif %}
+
+							{# Lien vers la page d'édition du livre avec les paramètres de recherche #}
+
+							<a href="{{ path('app_book_edit', linkParams) }}" class="w-full h-full text-center">
+								{% if book.isbn is not empty %}
+									<img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn|replace({'-': '', ' ': ''}) }}-M.jpg?default=false" alt="{{ book.isbn }}" class="text-center m-auto img-hover book-cover" data-fallback="{{ asset('livre-no-isbn.png') }}" style="width:60px;"/>
+								{% else %}
+									<img src="{{ asset('livre-no-isbn.png') }}" alt="{{ book.titre }}" class="text-center m-auto img-hover" style="width:60px;"/>
+								{% endif %}
+							</a>
+							<div class="card-body text-center">
+								<a href="{{ path('app_book_edit', linkParams) }}" class="text-dark">
+									<p class="card-title">
+										<strong>{{ book.titre }}</strong>
+									</p>
+
+									<p class="card-text">{{ book.auteur }}</p>
+								</a>
+							</div>
+							{% if book.note is not empty %}
+								<div class="card-footer text-center">
+									{% for i in 1..book.note %}
+										<i class="fa-solid fa-star text-warning"></i>
+									{% endfor %}
+								</div>
+							{% endif %}
+							<div class="card-footer text-center">
+								<span class="small">{{book.theme ? book.theme.name : 'Aucun thème' }}</span>
+								{% if book.sousTheme %}
+									<span class="small">
+										/
+										{{ book.sousTheme.name }}</span>
+								{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				{# Pagination navigation #}
+				{% if totalPages is defined and totalPages > 1 %}
+					<nav aria-label="Pagination" class="mt-4">
+						<ul class="pagination justify-content-center">
+							{% set routeName = theme is defined ? 'books_by_theme' : 'app_book' %}
+							{% set searchParams = {
+								'page': currentPage - 1,
+								'q': q|default(''),
+								'type': search_type|default(null)
+							} %}
+							{# Page précédente #}
+							<li class="page-item{% if currentPage == 1 %} disabled{% endif %}">
+								<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', searchParams|merge({'id': theme.id, 'page': currentPage - 1})) : path('app_book', searchParams|merge({'page': currentPage - 1})) }}" tabindex="-1">
+									<i class="fa-solid fa-chevron-left"></i>
+									Précédent</a>
+							</li>
+
+							{# Première page #}
+							{% if currentPage != 1 %}
+								<li class="page-item">
+									<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', searchParams|merge({'id': theme.id, 'page': 1})) : path('app_book', searchParams|merge({'page': 1})) }}">
+										1
+									</a>
+								</li>
+								{% if currentPage > 3 %}
+									<li class="page-item disabled">
+										<span class="page-link">...</span>
+									</li>
+								{% endif %}
+							{% endif %}
+
+							{# Page courante #}
+							<li class="page-item active bkg-lavande">
+								<span class="page-link">{{ currentPage }}</span>
+							</li>
+
+							{# Dernière page #}
+							{% if currentPage != totalPages %}
+								{% if currentPage < totalPages - 2 %}
+									<li class="page-item disabled">
+										<span class="page-link">...</span>
+									</li>
+								{% endif %}
+								<li class="page-item">
+									<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', searchParams|merge({'id': theme.id, 'page': totalPages})) : path('app_book', searchParams|merge({'page': totalPages})) }}">
+										{{ totalPages }}
+									</a>
+								</li>
+							{% endif %}
+
+							{# Page suivante #}
+							<li class="page-item{% if currentPage == totalPages %} disabled{% endif %}">
+								<a class="page-link" href="{{ routeName == 'books_by_theme' ? path('books_by_theme', searchParams|merge({'id': theme.id, 'page': currentPage + 1})) : path('app_book', searchParams|merge({'page': currentPage + 1})) }}">
+									Suivant
+									<i class="fa-solid fa-chevron-right"></i>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				{% endif %}
 			</div>
-		</div>
+		{% else %}
+			<div class="alert alert-info">
+				Vous n'êtes pas connecté.
+				<a href="{{ path('app_login') }}" class="btn btn-sm btn-primary">Connexion</a>
+			</div>
+		{% endif %}
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const bookCovers = document.querySelectorAll('.book-cover');
+bookCovers.forEach(function (img) {
+img.addEventListener('error', function () {
+const fallback = this.getAttribute('data-fallback');
+if (fallback && this.src !== fallback) {
+this.src = fallback;
+}
+});
+});
+});
+	</script>
 {% endblock %}

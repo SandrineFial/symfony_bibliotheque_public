@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -31,6 +33,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Themes>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Themes::class)]
+    private Collection $themes;
+
+// Dans le constructeur de User :
+public function __construct()
+{
+    // ...existing code...
+    $this->themes = new ArrayCollection();
+}
+
+    /**
+     * @return Collection<int, Themes>
+     */
+    public function getThemes(): Collection
+    {
+        return $this->themes;
+    }
+
+public function addTheme(Themes $theme): static
+{
+    if (!$this->themes->contains($theme)) {
+        $this->themes->add($theme);
+        $theme->setUser($this);
+    }
+
+    return $this;
+}
+
+public function removeTheme(Themes $theme): static
+{
+    if ($this->themes->removeElement($theme)) {
+        if ($theme->getUser() === $this) {
+            $theme->setUser(null);
+        }
+    }
+
+    return $this;
+}
+
 
     public function getId(): ?int
     {
